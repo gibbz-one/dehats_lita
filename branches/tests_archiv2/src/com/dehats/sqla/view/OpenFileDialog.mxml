@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+	xmlns:component="com.dehats.flex.component.*" 
+	xmlns:ns1="com.dehats.sqla.view.*"
+	width="446" height="260"
+	showCloseButton="{ closable}"
+	close=" closeMe()"
+	creationComplete=" onCreationComplete();"
+	title="Open Database">
+
+	<mx:Script>
+		<![CDATA[
+			import com.dehats.sqla.model.presentation.MainPM;
+			import com.dehats.sqla.model.FileManager;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import com.dehats.sqla.model.AssetManager;
+			
+			[Bindable]
+			public var closable:Boolean = true ;
+
+			[Bindable]
+			public var pm:MainPM;
+
+			[Bindable]			
+			private var selectedFile:File;
+			[Bindable]						
+			private var selectedFilePath:String;
+			
+			private function onCreationComplete():void
+			{
+				
+				trace(pm.recentlyOpenedFiles==null)
+				
+				if(pm.recentlyOpenedFiles.length>0)
+				{
+					var f:File = new File(pm.recentlyOpenedFiles[0].path);
+					if(f.exists) selectFile(f);
+				}
+			}
+			
+			private function promptOpen():void
+			{
+				var f:File = new File();
+				f.addEventListener(Event.SELECT, onFileSelected);
+				f.browseForOpen("Select a database file");
+			}
+			private function onFileSelected(pEvt:Event):void
+			{
+				pathTi.visible=true;
+				fileListCmb.visible=false;
+				selectFile(pEvt.target as File);
+			}
+			
+			private function selectFile(pFile:File):void
+			{
+				selectedFile = pFile;
+				selectedFilePath = selectedFile.nativePath;				
+			}
+		
+			private function openFile(pHash:String):void
+			{
+				if( selectedFile==null) return ;
+				pm.openDBFile( selectedFile, pHash);
+				closeMe();			
+			}
+		
+			private function closeMe():void
+			{
+				pm.onOpenFileDialogClosed(null);
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:ComboBox y="12" id="fileListCmb"
+		toolTip="{ (fileListCmb.selectedItem).path}"
+		change=" selectedFile = new File( fileListCmb.selectedItem.path)"
+		labelField="name"
+		dataProvider="{ pm.recentlyOpenedFiles }"
+		left="85" right="58"></mx:ComboBox>
+
+	<mx:TextInput id="pathTi" left="85"
+		visible="false"
+		text="{ selectedFilePath}" y="12" right="58"/>
+
+	<mx:Button 
+		toolTip="Browse for a file"
+		click=" promptOpen()"
+		label="..." y="12" right="10"/>
+		
+	
+	<mx:Label x="38" text="DB File" y="14"/>
+
+
+<!--
+	<mx:List id="fileList"
+		itemClick="selectedFile = new File( (event.itemRenderer.data).path) "
+		labelField="name"
+		dataProvider="{ pm.recentlyOpenedFiles }"
+		left="10" right="10" top="36" bottom="100"></mx:List>
+		
+-->	
+
+	<mx:Label id="keyLbl" text="Password" y="44" textAlign="right" x="22"/>
+	
+	<mx:TextInput id="hashTi" displayAsPassword="true"
+		enter=" openFile(hashTi.text)" 
+		y="42" right="153" left="85"/>
+	<mx:Label x="277" y="44" text="(Encrypted databases only)"/>
+	<mx:Button label="Open"
+		enabled="{ selectedFile!=null}"
+		click=" openFile(hashTi.text)" 
+		y="72" width="82" x="85"/>
+
+	<mx:HRule left="10" right="10" bottom="70"/>
+
+
+	<ns1:CommercialAd left="10" right="10" bottom="10">
+	</ns1:CommercialAd>
+
+	
+</mx:TitleWindow>
