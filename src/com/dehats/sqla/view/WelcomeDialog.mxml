@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="460" height="222" title="Welcome to Lita !"
+	showCloseButton="true"
+	close=" closeMe()" xmlns:ns1="com.dehats.sqla.view.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.dehats.sqla.model.presentation.MainPM;
+			import mx.managers.PopUpManager;
+			
+			public var pm:MainPM;
+			
+			private function closeMe():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Text y="10" text="Thanks for installing Lita, the SQLite database administration software. You can get to work by opening or creating a database:&#xd;" 
+		left="10" right="10" fontSize="13" height="40"/>
+
+	<mx:Button y="58" label="Open a Database" 
+		click=" pm.promptOpenFile(); closeMe();" 
+		width="180" horizontalCenter="-94"/>
+		
+	<mx:Button y="58" label="Create a New Database"
+		click=" pm.promptCreateDBFile(); closeMe();" 
+		width="180" horizontalCenter="94"/>
+		
+	<mx:Button x="224" y="109" label="Open a sample Database" width="180"
+		click=" pm.openSample(); closeMe()"/>
+	<mx:Label x="10" y="111" text="...or open our sample database file" fontSize="13"/>
+
+
+</mx:TitleWindow>
