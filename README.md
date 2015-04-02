@@ -1,7 +1,9 @@
 # dehats_lita
 
 
-This is a checkout from dehats_lita SVN repository located at
+This is a checkout of Lita - SQLite Administration Tool, an Adobe Air project to manage sqlite databases. 
+
+It is from dehats_lita SVN repository located at
 https://xp-dev.com/svn/dehats_lita/
 
 More info:
